@@ -22,7 +22,7 @@ export async function getLunchItem(lunchItemId: string) {
       },
     });
 
-    return { ...lunchItem, price: lunchItem.price.toNumber() };
+    return { ...lunchItem, price: lunchItem?.price.toNumber() };
   } catch (error: any) {
     throw new Error(error.message);
   }
