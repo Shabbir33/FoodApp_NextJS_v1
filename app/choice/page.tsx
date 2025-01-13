@@ -39,7 +39,7 @@ interface LedgerType {
 
 const Choice = () => {
   const router = useRouter();
-  const [companyEmployee, setCompanyEmployee] = useState(false);
+  const [companyEmployee, setCompanyEmployee] = useState<boolean | null>(null);
   const [existingEntry, setExistingEntry] = useState(false);
   const [existingLedger, setExistingLedger] = useState<LedgerType>();
   const [dialogOpen, setDialogOpen] = useState(false);
