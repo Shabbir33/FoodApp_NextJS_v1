@@ -4,11 +4,12 @@ import { PrismaClient } from "@prisma/client";
 //   let prisma: PrismaClient | undefined;
 // }
 
-export const db = globalThis.prisma || new PrismaClient();
+// export const db = globalThis.prisma || new PrismaClient();
+export const db = new PrismaClient();
 
-if (process.env.NODE_ENV !== "production") {
-  globalThis.prisma = db;
-}
+// if (process.env.NODE_ENV !== "production") {
+//   globalThis.prisma = db;
+// }
 
 // globalThis.prisma: This global variable ensures that the Prisma client instance is
 // reused across hot reloads during development. Without this, each time your application
