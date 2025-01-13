@@ -30,7 +30,7 @@ enum FoodType {
 // }
 
 interface LedgerType {
-  id: number;
+  id: string;
   date: Date;
   companyId: string;
   employeeId: string;
@@ -39,7 +39,7 @@ interface LedgerType {
 
 const ChoicePage = () => {
   const router = useRouter();
-  const [companyEmployee, setCompanyEmployee] = useState(null);
+  const [companyEmployee, setCompanyEmployee] = useState(false);
   const [existingEntry, setExistingEntry] = useState(false);
   const [existingLedger, setExistingLedger] = useState<LedgerType>();
   const [dialogOpen, setDialogOpen] = useState(false);

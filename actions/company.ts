@@ -67,7 +67,10 @@ export async function checkEmployeeCompany(
           companyId: companyEntry.id, // Correct placement
         },
       });
-      return updatedEmployee;
+      return {
+        isCompanyEmployee: true,
+        data: serializeTransaction(updatedEmployee),
+      };
     }
 
     return { isCompanyEmployee: true, data: serializeTransaction(employee) };
