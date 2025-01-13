@@ -1,0 +1,67 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Migration command for .env.local - npx dotenv-cli -e .env.local -- prisma migrate dev --name
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model Company{
+  id                 String             @id @default(uuid())
+  name               String             @unique
+  Employee           Employee[]
+  LunchLedger        LunchLedger[]
+
+  @@map("companies")
+}
+
+model Employee{
+  id                String              @id @default(uuid())
+  clerkUserId       String              @unique
+  phoneNumber       String              @unique
+  currentBalance    Decimal
+  companyId         String?
+  company           Company?             @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  LunchLedger       LunchLedger[]
+
+  @@index([companyId])
+  @@map("employees")
+}
+
+model LunchItem{
+  id                String              @id @default(uuid())
+  foodType          FoodType
+  price             Decimal
+  LunchLedger       LunchLedger[]
+  
+  @@map("lunchItems")
+}
+
+model LunchLedger{
+  id                String              @id @default(uuid())
+  date              DateTime            @default(now())
+  companyId         String
+  company           Company             @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  employeeId        String
+  employee          Employee            @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  lunchItemId       String
+  lunchItem         LunchItem           @relation(fields: [lunchItemId], references: [id], onDelete: Cascade)
+
+  @@index([companyId])
+  @@index([employeeId])
+  @@index([lunchItemId])
+  @@map("lunchledgers")
+}
+
+
+enum FoodType{
+  VEG
+  NONVEG
+}
