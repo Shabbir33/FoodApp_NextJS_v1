@@ -9,10 +9,18 @@ import { Badge } from "@/components/ui/badge";
 import { ClipLoader } from "react-spinners";
 import { getLunchItem } from "@/actions/lunchItem";
 
+interface LedgerType {
+  id: string;
+  date: Date;
+  companyId: string;
+  employeeId: string;
+  lunchItemId: string;
+}
+
 const TicketPage = () => {
   const params = useParams();
-  const [ledgerData, setLedgerData] = useState(null);
-  const [isCompanyEmployee, setIsCompanyEmployee] = useState(null);
+  const [ledgerData, setLedgerData] = useState<LedgerType>();
+  const [isCompanyEmployee, setIsCompanyEmployee] = useState(false);
   const [companyName, setCompanyName] = useState("");
   const [lunchItemType, setLunchItemType] = useState("");
   const [ledgerCount, setLedgerCount] = useState(0);
@@ -29,19 +37,19 @@ const TicketPage = () => {
     const fetchDetails = async () => {
       try {
         const company = await getCompanyForLedger(lunchLedgerId);
-        setCompanyName(company.name);
+        setCompanyName(company!.name);
 
-        const data = await checkEmployeeCompany(company.id, company.name);
+        const data = await checkEmployeeCompany(company!.id, company!.name);
         setIsCompanyEmployee(data.isCompanyEmployee);
         if (!data.isCompanyEmployee) {
           return;
         }
 
         const ledger = await getLedger(lunchLedgerId);
-        setLedgerData(ledger);
+        setLedgerData(ledger!);
 
-        const lunchItem = await getLunchItem(ledger.lunchItemId);
-        setLunchItemType(lunchItem.foodType);
+        const lunchItem = await getLunchItem(ledger!.lunchItemId);
+        setLunchItemType(lunchItem.foodType ?? "defaultFoodType");
 
         const count = await getCountOfLedgersBefore(lunchLedgerId);
         setLedgerCount(count);
