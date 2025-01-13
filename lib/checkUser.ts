@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import { currentUser } from "@clerk/nextjs/server";
 import { db } from "./prisma";
 
@@ -27,7 +29,7 @@ export const checkUser = async () => {
     });
 
     return newUser;
-  } catch (error) {
+  } catch (error: any) {
     console.log(error.message);
   }
 };

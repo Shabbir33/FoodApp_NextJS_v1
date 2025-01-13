@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 "use server";
 
 import { db } from "@/lib/prisma";
@@ -21,7 +23,7 @@ export async function getLedger(lunchLedgerId: string) {
     });
 
     return ledger;
-  } catch (error) {
+  } catch (error: any) {
     throw new Error(error.message);
   }
 }
@@ -77,7 +79,7 @@ export async function createLedger(
     // Update the Daily Redis Cache Object form Daily Count
 
     return { existingEntry: false, data: newLedger };
-  } catch (error) {
+  } catch (error: any) {
     throw new Error(error.message);
   }
 }
@@ -125,7 +127,7 @@ export async function getCountOfLedgersBefore(
     });
 
     return count;
-  } catch (error) {
+  } catch (error: any) {
     throw new Error(error.message);
   }
 }

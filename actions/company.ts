@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use server";
 
 import { db } from "@/lib/prisma";
@@ -10,7 +11,7 @@ const allowedNumbers = [
   "+919980081000",
 ]; //"+917990787532"
 
-const serializeTransaction = (obj) => {
+const serializeTransaction = (obj: any) => {
   const serialized = { ...obj };
 
   if (obj.currentBalance) {
@@ -70,7 +71,7 @@ export async function checkEmployeeCompany(
     }
 
     return { isCompanyEmployee: true, data: serializeTransaction(employee) };
-  } catch (error) {
+  } catch (error: any) {
     throw new Error(error.message);
   }
 }
@@ -102,7 +103,7 @@ export async function getCompanyForLedger(lunchLedgerId: string) {
     });
 
     return company;
-  } catch (error) {
+  } catch (error: any) {
     throw new Error(error.message);
   }
 }

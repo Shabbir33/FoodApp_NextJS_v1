@@ -29,11 +29,19 @@ enum FoodType {
 //   data: any;
 // }
 
+interface LedgerType {
+  id: number;
+  date: Date;
+  companyId: string;
+  employeeId: string;
+  lunchItemId: string;
+}
+
 const ChoicePage = () => {
   const router = useRouter();
   const [companyEmployee, setCompanyEmployee] = useState(null);
   const [existingEntry, setExistingEntry] = useState(false);
-  const [existingLedger, setExistingLedger] = useState(null);
+  const [existingLedger, setExistingLedger] = useState<LedgerType>();
   const [dialogOpen, setDialogOpen] = useState(false);
 
   const params = useSearchParams();

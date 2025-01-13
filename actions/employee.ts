@@ -1,9 +1,10 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use server";
 
 import { db } from "@/lib/prisma";
 import { auth } from "@clerk/nextjs/server";
 
-const serializeTransaction = (obj) => {
+const serializeTransaction = (obj: any) => {
   const serialized = { ...obj };
 
   if (obj.currentBalance) {
@@ -26,7 +27,7 @@ export async function getEmployee() {
     console.log(employee);
 
     return serializeTransaction(employee);
-  } catch (error) {
+  } catch (error: any) {
     throw new Error(error.message);
   }
 }

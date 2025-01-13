@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 "use server";
 
 import { db } from "@/lib/prisma";
@@ -21,7 +23,7 @@ export async function getLunchItem(lunchItemId: string) {
     });
 
     return { ...lunchItem, price: lunchItem.price.toNumber() };
-  } catch (error) {
+  } catch (error: any) {
     throw new Error(error.message);
   }
 }
