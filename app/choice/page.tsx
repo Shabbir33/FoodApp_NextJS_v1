@@ -43,6 +43,7 @@ const Choice = () => {
   const [existingEntry, setExistingEntry] = useState(false);
   const [existingLedger, setExistingLedger] = useState<LedgerType>();
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const params = useSearchParams();
   console.log(params.get("company"));
@@ -79,6 +80,7 @@ const Choice = () => {
   // }, []);
 
   const handleClick = async (lunchItemId: FoodType) => {
+    setIsLoading(true);
     // Update to getting companyId from the Employee table using ClerkUserId
     const companyId = params.get("companyId");
 
@@ -91,11 +93,13 @@ const Choice = () => {
       setExistingEntry(true);
       setExistingLedger(ledger.data);
       setDialogOpen(true);
+      setIsLoading(false);
       return;
     }
 
     // Go to Tickets Page
     router.push(`/ticket/${ledger.data.id}`);
+    setIsLoading(false);
   };
 
   console.log("ExistingLedger: " + existingLedger);
@@ -118,13 +122,23 @@ const Choice = () => {
                 <div className="flex gap-4 justify-center">
                   <button
                     onClick={() => handleClick(FoodType.VEG)}
-                    className="px-6 py-3 bg-green-500 text-white font-semibold rounded-lg hover:bg-green-600 transition"
+                    className={`px-6 py-3 font-semibold rounded-lg transition ${
+                      isLoading
+                        ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+                        : "bg-green-500 text-white hover:bg-green-600"
+                    }`}
+                    disabled={isLoading}
                   >
                     Veg
                   </button>
                   <button
                     onClick={() => handleClick(FoodType.NONVEG)}
-                    className="px-6 py-3 bg-red-500 text-white font-semibold rounded-lg hover:bg-red-600 transition"
+                    className={`px-6 py-3 font-semibold rounded-lg transition ${
+                      isLoading
+                        ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+                        : "bg-red-500 text-white hover:bg-red-600"
+                    }`}
+                    disabled={isLoading}
                   >
                     Non-Veg
                   </button>
