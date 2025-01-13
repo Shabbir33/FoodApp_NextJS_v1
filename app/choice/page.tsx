@@ -4,7 +4,7 @@ import { checkEmployeeCompany } from "@/actions/company";
 import { getEmployee } from "@/actions/employee";
 import { createLedger } from "@/actions/ledger";
 import { useRouter, useSearchParams } from "next/navigation";
-import React, { Suspense, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Dialog,
@@ -50,6 +50,8 @@ const ChoicePage = () => {
 
     check();
   }, [params]);
+
+  console.log(existingEntry);
 
   // useEffect(() => {
   //   const checkExistingLedger = async () => {

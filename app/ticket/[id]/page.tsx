@@ -19,6 +19,8 @@ const TicketPage = () => {
 
   const { id: lunchLedgerId } = params;
 
+  console.log(ledgerData);
+
   useEffect(() => {
     if (typeof lunchLedgerId !== "string") {
       return; // Ensure lunchLedgerId is a valid string before making API calls
