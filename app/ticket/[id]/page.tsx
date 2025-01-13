@@ -20,7 +20,9 @@ interface LedgerType {
 const TicketPage = () => {
   const params = useParams();
   const [ledgerData, setLedgerData] = useState<LedgerType>();
-  const [isCompanyEmployee, setIsCompanyEmployee] = useState(false);
+  const [isCompanyEmployee, setIsCompanyEmployee] = useState<boolean | null>(
+    null
+  );
   const [companyName, setCompanyName] = useState("");
   const [lunchItemType, setLunchItemType] = useState("");
   const [ledgerCount, setLedgerCount] = useState(0);
