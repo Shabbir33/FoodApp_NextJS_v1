@@ -94,7 +94,7 @@ export async function getCompanyForLedger(lunchLedgerId: string) {
 
     // UPDATE - Compare LunchLedger companyId with employee companyId for validation
 
-    const companyId = lunchLedger.companyId;
+    const companyId = lunchLedger?.companyId;
 
     const company = await db.company.findUnique({
       where: {
