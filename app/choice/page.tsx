@@ -4,7 +4,7 @@ import { checkEmployeeCompany } from "@/actions/company";
 import { getEmployee } from "@/actions/employee";
 import { createLedger } from "@/actions/ledger";
 import { useRouter, useSearchParams } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Dialog,
@@ -37,7 +37,7 @@ interface LedgerType {
   lunchItemId: string;
 }
 
-const ChoicePage = () => {
+const Choice = () => {
   const router = useRouter();
   const [companyEmployee, setCompanyEmployee] = useState(false);
   const [existingEntry, setExistingEntry] = useState(false);
@@ -188,6 +188,14 @@ const ChoicePage = () => {
           </Card>
         ))}
     </div>
+  );
+};
+
+const ChoicePage = () => {
+  return (
+    <Suspense>
+      <Choice />
+    </Suspense>
   );
 };
 
