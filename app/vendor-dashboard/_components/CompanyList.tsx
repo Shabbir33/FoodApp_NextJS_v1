@@ -1,32 +1,75 @@
+"use client";
+
 import { getCompanies } from "@/actions/company";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { getDayLedgerCountPerItemCompany } from "@/actions/ledger";
 import CompanyModalButton from "./CompanyModalButton";
 
-const CompanyList = async () => {
-  const companies = await getCompanies();
+interface Company {
+  id: string;
+  name: string;
+}
 
-  const companyItemData = await getDayLedgerCountPerItemCompany(new Date());
+interface CompanyItem {
+  companyId: string;
+  companyName: string;
+  lunchItemId: string;
+  lunchItemName: string;
+  count: number;
+}
 
-  const companyData = companies.map((company) => {
-    const itemData = companyItemData.filter(
-      (item) => item.companyId === company.id
-    );
+interface CompanyData {
+  id: string;
+  name: string;
+  items:
+    | {
+        itemId: string;
+        itemName: string;
+        itemCount: number;
+      }[]
+    | undefined;
+}
 
-    return {
-      ...company,
-      items: itemData.map((item) => ({
-        itemId: item?.lunchItemId,
-        itemName: item?.lunchItemName,
-        itemCount: item?.count,
-      })),
+const CompanyList = () => {
+  const [companies, setCompanies] = useState<Company[]>();
+  const [companyItems, setCompanyItems] = useState<CompanyItem[]>();
+  const [companyData, setCompanyData] = useState<CompanyData[]>();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const companies = await getCompanies();
+      setCompanies(companies);
+
+      const companyItemData = await getDayLedgerCountPerItemCompany(new Date());
+      setCompanyItems(companyItemData);
     };
-  });
+
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    const companyData = companies?.map((company) => {
+      const itemData = companyItems?.filter(
+        (item) => item.companyId === company.id
+      );
+
+      return {
+        ...company,
+        items: itemData?.map((item) => ({
+          itemId: item?.lunchItemId,
+          itemName: item?.lunchItemName,
+          itemCount: item?.count,
+        })),
+      };
+    });
+
+    if (companyData) setCompanyData(companyData);
+  }, [companies, companyItems]);
 
   return (
     <div className="p-4">
-      {companyData.map((company) => (
+      {companyData?.map((company) => (
         <Card
           key={company.id}
           className="flex flex-row items-center justify-between shadow-md rounded-lg bg-white dark:bg-gray-800 hover:shadow-lg transition-shadow border border-gray-700"
