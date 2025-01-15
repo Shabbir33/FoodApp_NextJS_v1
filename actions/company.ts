@@ -21,6 +21,21 @@ const serializeTransaction = (obj: any) => {
   return serialized;
 };
 
+export async function getCompanies() {
+  try {
+    const { userId } = await auth();
+    if (!userId) throw new Error("Unauthorized!");
+
+    // Update - Check if a Vendor
+
+    const companies = db.company.findMany();
+
+    return companies;
+  } catch (error: any) {
+    throw new Error(error.message);
+  }
+}
+
 export async function checkEmployeeCompany(
   companyId: string,
   companyName: string
@@ -95,9 +110,13 @@ export async function getCompanyForLedger(lunchLedgerId: string) {
       },
     });
 
+    console.log(lunchLedgerId);
+
     // UPDATE - Compare LunchLedger companyId with employee companyId for validation
 
     const companyId = lunchLedger?.companyId;
+
+    console.log(companyId);
 
     const company = await db.company.findUnique({
       where: {

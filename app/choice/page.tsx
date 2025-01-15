@@ -16,17 +16,13 @@ import {
 } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
 import { ClipLoader } from "react-spinners";
+import ItemCard from "./_components/ItemCard";
 
 // Test URL - http://localhost:3000/choice?company=framsikt&companyId=57110883-2670-4e31-8582-f3fc267f09a0
 
-enum FoodType {
-  VEG = "b100339f-54d2-4562-a3b8-ec6a6b81b9f9",
-  NONVEG = "a0e29436-77be-492c-b653-5f57eff3191c",
-}
-
-// interface LedgerData {
-//   existingEntry: boolean;
-//   data: any;
+// enum FoodType {
+//   VEG = "b100339f-54d2-4562-a3b8-ec6a6b81b9f9",
+//   NONVEG = "a0e29436-77be-492c-b653-5f57eff3191c",
 // }
 
 interface LedgerType {
@@ -62,24 +58,7 @@ const Choice = () => {
 
   console.log(existingEntry);
 
-  // useEffect(() => {
-  //   const checkExistingLedger = async () => {
-  //     const companyId = params.get("companyId");
-
-  //     const employee = await getEmployee();
-
-  //     const ledger = await getDayLedger(employee.id);
-
-  //     if (ledger.existingEntry) {
-  //       setExistingEntry(true);
-  //       setExistingLedger(ledger.data);
-  //       setDialogOpen(true);
-  //       return;
-  //     }
-  //   };
-  // }, []);
-
-  const handleClick = async (lunchItemId: FoodType) => {
+  const handleClick = async (lunchItemId: string) => {
     setIsLoading(true);
     // Update to getting companyId from the Employee table using ClerkUserId
     const companyId = params.get("companyId");
@@ -110,17 +89,17 @@ const Choice = () => {
       {companyEmployee != null &&
         (companyEmployee ? (
           <div>
-            <Card>
+            <Card className="w-[400px] md:w-[450px]">
               <CardHeader>
                 <CardTitle>
-                  <h2 className="text-2xl font-semibold mb-6">
-                    Choose Your Lunch
+                  <h2 className="text-2xl font-semibold text-center">
+                    Lunch Options
                   </h2>
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="flex gap-4 justify-center">
-                  <button
+                <div className="flex flex-col gap-4 justify-center">
+                  {/* <button
                     onClick={() => handleClick(FoodType.VEG)}
                     className={`px-6 py-3 font-semibold rounded-lg transition ${
                       isLoading
@@ -141,14 +120,30 @@ const Choice = () => {
                     disabled={isLoading}
                   >
                     Non-Veg
-                  </button>
+                  </button> */}
+                  <ItemCard
+                    isLoading={isLoading}
+                    handleClick={handleClick}
+                    itemId="a0e29436-77be-492c-b653-5f57eff3191c"
+                    itemName="NONVEG"
+                    itemPrice={150}
+                    isVeg={false}
+                  />
+                  <ItemCard
+                    isLoading={isLoading}
+                    handleClick={handleClick}
+                    itemId="b100339f-54d2-4562-a3b8-ec6a6b81b9f9"
+                    itemName="VEG"
+                    itemPrice={120}
+                    isVeg={true}
+                  />
                 </div>
               </CardContent>
             </Card>
 
             <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
               <DialogTrigger />
-              <DialogContent className="max-w-md mx-auto p-6 rounded-lg shadow-lg">
+              <DialogContent className="w-[350px] mx-auto p-6 rounded-lg shadow-lg">
                 <DialogHeader>
                   <DialogTitle className="text-center">
                     <p className="text-lg font-bold">
@@ -156,7 +151,9 @@ const Choice = () => {
                     </p>
                   </DialogTitle>
                   <DialogDescription>
-                    <p>Issued at: {existingLedger?.date.toLocaleString()}</p>
+                    <span>
+                      Issued at: {existingLedger?.date.toLocaleString()}
+                    </span>
                     <button
                       onClick={() =>
                         router.push(`/ticket/${existingLedger?.id}`)

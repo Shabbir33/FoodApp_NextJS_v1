@@ -17,13 +17,15 @@ const QRScanner = () => {
   };
 
   return (
-    <div className="flex justify-center items-center h-screen">
-      <Card className="flex flex-col justify-center items-center">
-        <CardHeader className="text-center mb-4">
-          <CardTitle className="text-2xl font-semibold">Scan QR Code</CardTitle>
+    <div className="flex justify-center items-center">
+      <Card className="w-full max-w-md bg-gray-950 shadow-lg rounded-lg overflow-hidden">
+        <CardHeader className="text-center p-6 border-b border-gray-700">
+          <CardTitle className="text-2xl font-semibold text-white">
+            Scan QR Code
+          </CardTitle>
         </CardHeader>
-        <CardContent className="flex justify-center items-center h-80 w-80">
-          <div>
+        <CardContent className="p-6 flex justify-center items-center">
+          <div className="flex flex-col items-center justify-center w-72 h-72 bg-gray-700 shadow-inner border-4 border-black">
             <Scanner onScan={handleScan} />
           </div>
         </CardContent>

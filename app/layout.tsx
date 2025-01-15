@@ -9,6 +9,9 @@ import {
   UserButton,
 } from "@clerk/nextjs";
 import { checkUser } from "@/lib/checkUser";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { ScanQrCode } from "lucide-react";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -35,15 +38,40 @@ export default async function RootLayout({
     <ClerkProvider>
       <html lang="en">
         <body
-          className={`${geistSans.variable} ${geistMono.variable} antialiased dark`}
+          className={`${geistSans.variable} ${geistMono.variable} antialiased dark text-white`}
         >
-          <SignedOut>
-            <SignInButton />
-          </SignedOut>
-          <SignedIn>
-            <UserButton />
-          </SignedIn>
-          {children}
+          <header className="absolute top-0 left-0 w-full z-50 bg-gray-900 bg-opacity-75 sticky">
+            <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+              <div className="flex justify-between items-center h-16">
+                {/* Left Section */}
+                <div className="flex items-center space-x-4">
+                  <Button variant="secondary" className="hover:bg-gray-800">
+                    <Link href="/" className="flex flex-row items-center gap-1">
+                      <ScanQrCode className="w-6 h-6" />
+                      <span>Scanner</span>
+                    </Link>
+                  </Button>
+                </div>
+
+                {/* Right Section */}
+                <div className="flex items-center space-x-4">
+                  <SignedOut>
+                    <SignInButton>
+                      <button className="px-4 py-2 text-sm bg-blue-600 text-white rounded-md hover:bg-blue-700 transition">
+                        Sign In
+                      </button>
+                    </SignInButton>
+                  </SignedOut>
+                  <SignedIn>
+                    <UserButton afterSignOutUrl="/" />
+                  </SignedIn>
+                </div>
+              </div>
+            </nav>
+          </header>
+
+          {/* Main Content */}
+          <main>{children}</main>
         </body>
       </html>
     </ClerkProvider>

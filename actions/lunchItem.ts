@@ -27,3 +27,21 @@ export async function getLunchItem(lunchItemId: string) {
     throw new Error(error.message);
   }
 }
+
+export async function getLunchItems() {
+  try {
+    const { userId } = await auth();
+    if (!userId) throw new Error("Unauthorized!");
+
+    // Update - Check Either a Employee or a Vendor
+
+    const lunchItems = await db.lunchItem.findMany();
+
+    return lunchItems?.map((item) => ({
+      ...item,
+      price: item.price.toNumber(),
+    }));
+  } catch (error: any) {
+    throw new Error(error.message);
+  }
+}

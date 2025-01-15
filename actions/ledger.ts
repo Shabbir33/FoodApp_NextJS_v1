@@ -96,6 +96,12 @@ export async function getCountOfLedgersBefore(
     const { userId } = await auth();
     if (!userId) throw new Error("Unauthorized!");
 
+    const employee = await db.employee.findUnique({
+      where: { clerkUserId: userId },
+    });
+
+    if (!employee) throw new Error("Employee not found!");
+
     // Fetch the reference ledger
     const referenceLedger = await db.lunchLedger.findUnique({
       where: { id: ledgerId },
@@ -127,6 +133,118 @@ export async function getCountOfLedgersBefore(
     });
 
     return count;
+  } catch (error: any) {
+    throw new Error(error.message);
+  }
+}
+
+export async function updateLedgerItem(
+  lunchLedgerId: string,
+  lunchItemId: string
+) {
+  try {
+    const { userId } = await auth();
+    if (!userId) throw new Error("Unauthorized!");
+
+    const employee = await db.employee.findUnique({
+      where: { clerkUserId: userId },
+    });
+
+    if (!employee) throw new Error("Employee not found!");
+
+    // Fetch the reference ledger
+    const referenceLedger = await db.lunchLedger.update({
+      where: { id: lunchLedgerId },
+      data: {
+        lunchItemId: lunchItemId,
+      },
+    });
+
+    if (!referenceLedger) throw new Error("Ledger not found!");
+  } catch (error: any) {
+    throw new Error(error.message);
+  }
+}
+
+export async function getDayLedgerCountPerItem(date: Date) {
+  try {
+    const { userId } = await auth();
+    if (!userId) throw new Error("Unauthorized!");
+
+    // Update - Check if a Vendor
+
+    // Query for the count of lunch items grouped by lunchItemId for the given date
+    const itemCounts = await db.lunchLedger.groupBy({
+      by: ["lunchItemId"],
+      _count: { lunchItemId: true },
+      where: {
+        date: {
+          gte: new Date(date.setHours(0, 0, 0, 0)), // Start of the day
+          lt: new Date(date.setHours(23, 59, 59, 999)), // End of the day
+        },
+      },
+    });
+
+    // Include additional data like lunch item names
+    const itemDetails = await Promise.all(
+      itemCounts.map(async (item) => {
+        const lunchItem = await db.lunchItem.findUnique({
+          where: { id: item.lunchItemId },
+        });
+        return {
+          lunchItemId: item.lunchItemId,
+          lunchItemName: lunchItem?.foodType || "Unknown Item",
+          count: item._count.lunchItemId,
+        };
+      })
+    );
+
+    return itemDetails;
+  } catch (error: any) {
+    throw new Error(error.message);
+  }
+}
+
+export async function getDayLedgerCountPerItemCompany(date: Date) {
+  try {
+    const { userId } = await auth();
+    if (!userId) throw new Error("Unauthorized!");
+
+    // Update - Check if a Vendor or a Company Admin
+
+    // Query for the count of lunch items grouped by companyId and lunchItemId for the given date
+    const itemCountsPerCompany = await db.lunchLedger.groupBy({
+      by: ["companyId", "lunchItemId"],
+      _count: { lunchItemId: true },
+      where: {
+        date: {
+          gte: new Date(date.setHours(0, 0, 0, 0)), // Start of the day
+          lt: new Date(date.setHours(23, 59, 59, 999)), // End of the day
+        },
+      },
+    });
+
+    // Include company and lunch item details
+    const itemDetailsPerCompany = await Promise.all(
+      itemCountsPerCompany.map(async (entry) => {
+        const company = await db.company.findUnique({
+          where: { id: entry.companyId },
+        });
+        const lunchItem = await db.lunchItem.findUnique({
+          where: { id: entry.lunchItemId },
+        });
+
+        return {
+          companyId: entry.companyId,
+          companyName: company?.name || "Unknown Company",
+          lunchItemId: entry.lunchItemId,
+          lunchItemName: lunchItem?.foodType || "Unknown Item",
+          count: entry._count.lunchItemId,
+        };
+      })
+    );
+
+    return itemDetailsPerCompany;
   } catch (error: any) {
     throw new Error(error.message);
   }

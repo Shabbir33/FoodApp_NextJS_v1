@@ -87,7 +87,23 @@ const TicketPage = () => {
                     {ledgerCount == 0 ? "Loading..." : ledgerCount}
                   </p>
                 </div>
+                <div className="mb-4 flex flex-row justify-center gap-2">
+                  <p className="text-sm font-medium text-gray-500">
+                    Issued At:
+                  </p>
+                  <p className="text-sm font-medium text-gray-300">
+                    {ledgerData?.date.toLocaleString()}
+                  </p>
+                </div>
                 <div>
+                  {/* {ledgerData && (
+                    <ItemSelectionMenu
+                      initialValueId={ledgerData?.lunchItemId}
+                      setLunchItemType={setLunchItemType}
+                      ledgerId={ledgerData?.id}
+                    >
+                    </ItemSelectionMenu>
+                    )} */}
                   <Badge
                     className={`${
                       lunchItemType === "NONVEG"
