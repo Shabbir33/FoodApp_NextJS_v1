@@ -17,13 +17,9 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { ClipLoader } from "react-spinners";
 import ItemCard from "./_components/ItemCard";
+import { getLunchItems } from "@/actions/lunchItem";
 
 // Test URL - http://localhost:3000/choice?company=framsikt&companyId=57110883-2670-4e31-8582-f3fc267f09a0
-
-// enum FoodType {
-//   VEG = "b100339f-54d2-4562-a3b8-ec6a6b81b9f9",
-//   NONVEG = "a0e29436-77be-492c-b653-5f57eff3191c",
-// }
 
 interface LedgerType {
   id: string;
@@ -33,6 +29,13 @@ interface LedgerType {
   lunchItemId: string;
 }
 
+interface ItemType {
+  id: string;
+  foodType: string;
+  price: number;
+  isVeg: boolean;
+}
+
 const Choice = () => {
   const router = useRouter();
   const [companyEmployee, setCompanyEmployee] = useState<boolean | null>(null);
@@ -40,6 +43,7 @@ const Choice = () => {
   const [existingLedger, setExistingLedger] = useState<LedgerType>();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [foodItems, setFoodItems] = useState<ItemType[]>();
 
   const params = useSearchParams();
   console.log(params.get("company"));
@@ -56,7 +60,18 @@ const Choice = () => {
     check();
   }, [params]);
 
+  useEffect(() => {
+    const fetchItems = async () => {
+      const items = await getLunchItems();
+
+      setFoodItems(items);
+    };
+
+    fetchItems();
+  }, []);
+
   console.log(existingEntry);
+  console.log(foodItems);
 
   const handleClick = async (lunchItemId: string) => {
     setIsLoading(true);
@@ -99,44 +114,26 @@ const Choice = () => {
               </CardHeader>
               <CardContent>
                 <div className="flex flex-col gap-4 justify-center">
-                  {/* <button
-                    onClick={() => handleClick(FoodType.VEG)}
-                    className={`px-6 py-3 font-semibold rounded-lg transition ${
-                      isLoading
-                        ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-                        : "bg-green-500 text-white hover:bg-green-600"
-                    }`}
-                    disabled={isLoading}
-                  >
-                    Veg
-                  </button>
-                  <button
-                    onClick={() => handleClick(FoodType.NONVEG)}
-                    className={`px-6 py-3 font-semibold rounded-lg transition ${
-                      isLoading
-                        ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-                        : "bg-red-500 text-white hover:bg-red-600"
-                    }`}
-                    disabled={isLoading}
-                  >
-                    Non-Veg
-                  </button> */}
-                  <ItemCard
-                    isLoading={isLoading}
-                    handleClick={handleClick}
-                    itemId="a0e29436-77be-492c-b653-5f57eff3191c"
-                    itemName="NONVEG"
-                    itemPrice={150}
-                    isVeg={false}
-                  />
-                  <ItemCard
-                    isLoading={isLoading}
-                    handleClick={handleClick}
-                    itemId="b100339f-54d2-4562-a3b8-ec6a6b81b9f9"
-                    itemName="VEG"
-                    itemPrice={120}
-                    isVeg={true}
-                  />
+                  {foodItems == null && (
+                    <div className="flex items-center justify-center h-full">
+                      <ClipLoader
+                        color="white"
+                        className="items-center justify-between"
+                      />
+                    </div>
+                  )}
+                  {foodItems &&
+                    foodItems?.map((item) => (
+                      <ItemCard
+                        key={item.id}
+                        isLoading={isLoading}
+                        handleClick={handleClick}
+                        itemId={item.id}
+                        itemName={item.foodType}
+                        itemPrice={item.price}
+                        isVeg={item.isVeg}
+                      />
+                    ))}
                 </div>
               </CardContent>
             </Card>

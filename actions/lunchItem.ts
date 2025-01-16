@@ -34,8 +34,15 @@ export async function getLunchItems() {
     if (!userId) throw new Error("Unauthorized!");
 
     // Update - Check Either a Employee or a Vendor
+    const employee = await db.employee.findUnique({
+      where: { clerkUserId: userId },
+    });
+
+    if (!employee) throw new Error("Employee not found!");
 
     const lunchItems = await db.lunchItem.findMany();
+
+    console.log(lunchItems);
 
     return lunchItems?.map((item) => ({
       ...item,

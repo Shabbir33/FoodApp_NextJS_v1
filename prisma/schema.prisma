@@ -39,6 +39,7 @@ model LunchItem{
   id                String              @id @default(uuid())
   foodType          FoodType
   price             Decimal
+  isVeg             Boolean             @default(false)
   LunchLedger       LunchLedger[]
   
   @@map("lunchItems")
