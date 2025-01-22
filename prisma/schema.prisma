@@ -25,7 +25,7 @@ model Company{
 model Employee{
   id                String              @id @default(uuid())
   clerkUserId       String              @unique
-  phoneNumber       String              @unique
+  email             String              @unique
   currentBalance    Decimal
   companyId         String?
   company           Company?             @relation(fields: [companyId], references: [id], onDelete: Cascade)
@@ -37,7 +37,7 @@ model Employee{
 
 model LunchItem{
   id                String              @id @default(uuid())
-  foodType          FoodType
+  foodType          String
   price             Decimal
   isVeg             Boolean             @default(false)
   LunchLedger       LunchLedger[]
@@ -59,10 +59,4 @@ model LunchLedger{
   @@index([employeeId])
   @@index([lunchItemId])
   @@map("lunchledgers")
-}
-
-
-enum FoodType{
-  VEG
-  NONVEG
 }

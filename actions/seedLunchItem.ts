@@ -4,16 +4,11 @@
 
 import { db } from "@/lib/prisma";
 
-enum FoodType {
-  VEG = "VEG",
-  NONVEG = "NONVEG",
-}
-
 export async function seedLunchItems() {
   try {
     const lunchItems = [
-      { foodType: FoodType.VEG, price: 120 },
-      { foodType: FoodType.NONVEG, price: 150 },
+      { foodType: "VEG", price: 120 },
+      { foodType: "NONVEG", price: 150 },
     ];
 
     // Insert seed data into the database

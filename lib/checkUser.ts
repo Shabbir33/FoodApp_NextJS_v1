@@ -23,7 +23,7 @@ export const checkUser = async () => {
     const newUser = await db.employee.create({
       data: {
         clerkUserId: user.id,
-        phoneNumber: user.phoneNumbers?.[0]?.phoneNumber || "N/A", // Use the first available phone number or fallback
+        email: user.emailAddresses[0].emailAddress,
         currentBalance: 0,
       },
     });

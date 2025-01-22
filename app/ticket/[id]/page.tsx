@@ -82,7 +82,7 @@ const TicketPage = () => {
                   </p>
                 </div>
                 <div className="mb-4 flex flex-row justify-center gap-2">
-                  <p className="text-lg font-medium text-gray-400">ID:</p>
+                  <p className="text-lg font-medium text-gray-400">Count:</p>
                   <p className="text-lg font-medium text-white">
                     {ledgerCount == 0 ? "Loading..." : ledgerCount}
                   </p>
