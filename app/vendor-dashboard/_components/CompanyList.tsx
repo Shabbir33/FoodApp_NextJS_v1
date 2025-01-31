@@ -31,22 +31,25 @@ interface CompanyData {
     | undefined;
 }
 
-const CompanyList = () => {
+const CompanyList = ({ date }: { date: Date }) => {
   const [companies, setCompanies] = useState<Company[]>();
   const [companyItems, setCompanyItems] = useState<CompanyItem[]>();
   const [companyData, setCompanyData] = useState<CompanyData[]>();
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
+      setLoading(true);
       const companies = await getCompanies();
       setCompanies(companies);
 
-      const companyItemData = await getDayLedgerCountPerItemCompany(new Date());
+      const companyItemData = await getDayLedgerCountPerItemCompany(date);
       setCompanyItems(companyItemData);
+      setLoading(false);
     };
 
     fetchData();
-  }, []);
+  }, [date]);
 
   useEffect(() => {
     const companyData = companies?.map((company) => {
@@ -81,7 +84,7 @@ const CompanyList = () => {
             </CardTitle>
           </CardHeader>
           <CardContent className="p-2">
-            <CompanyModalButton company={company} />
+            {!loading && <CompanyModalButton company={company} />}
           </CardContent>
         </Card>
       ))}
