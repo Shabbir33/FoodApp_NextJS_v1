@@ -37,13 +37,22 @@ const CompanyList = ({ date }: { date: Date }) => {
   const [companyData, setCompanyData] = useState<CompanyData[]>();
   const [loading, setLoading] = useState(true);
 
+  // Function to convert the date to IST
+  const getISTDate = (date: Date) => {
+    const utcDate = new Date(date.getTime() + date.getTimezoneOffset() * 60000); // Convert to UTC
+    const istDate = new Date(utcDate.getTime() + 5.5 * 60 * 60 * 1000); // Add IST offset (UTC+5:30)
+    return istDate;
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
       const companies = await getCompanies();
       setCompanies(companies);
 
-      const companyItemData = await getDayLedgerCountPerItemCompany(date);
+      const companyItemData = await getDayLedgerCountPerItemCompany(
+        getISTDate(date)
+      );
       setCompanyItems(companyItemData);
       setLoading(false);
     };

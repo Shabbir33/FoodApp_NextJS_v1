@@ -14,6 +14,7 @@ import { DatePicker } from "./_components/DatePicker";
 
 const VendorDashboardPage = () => {
   const [date, setDate] = React.useState<Date | undefined>(new Date());
+
   return (
     <div className="flex justify-center items-center min-h-screen bg-black">
       <Card className="w-[400px] md:w-[450px] bg-card shadow-lg rounded-lg">
