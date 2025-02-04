@@ -235,6 +235,7 @@ export async function getDayLedgerCountPerItemCompany(date: Date) {
         });
 
         return {
+          date: date,
           companyId: entry.companyId,
           companyName: company?.name || "Unknown Company",
           lunchItemId: entry.lunchItemId,
