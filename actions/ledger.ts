@@ -173,7 +173,36 @@ export async function getDayLedgerCountPerItem(date: Date) {
 
     // Update - Check if a Vendor
 
-    const dateString = date.toISOString().split("T")[0]; // Extract YYYY-MM-DD
+    // Convert Date to ISO String in UTC
+    const utcISOString = date.toISOString();
+    const [utcDate, utcTime] = utcISOString.split("T");
+
+    // Extract hours, minutes, seconds from the time
+    const [hours, minutes] = utcTime.split(":").map(Number);
+
+    // Convert UTC time to IST (+5:30)
+    let istHours = hours + 5;
+    let istMinutes = minutes + 30;
+
+    if (istMinutes >= 60) {
+      istHours += Math.floor(istMinutes / 60);
+      istMinutes = istMinutes % 60;
+    }
+
+    let istDate = parseInt(utcDate.split("-")[2]); // Extract day
+
+    if (istHours >= 24) {
+      istDate += Math.floor(istHours / 24);
+      istHours = istHours % 24;
+    }
+
+    // Reconstruct IST date string
+    const year = utcDate.split("-")[0];
+    const month = utcDate.split("-")[1];
+    const day = String(istDate).padStart(2, "0");
+    const dateString = `${year}-${month}-${day}`;
+    console.log(dateString);
+
     // Query for the count of lunch items grouped by lunchItemId for the given date
     const itemCounts = await db.lunchLedger.groupBy({
       by: ["lunchItemId"],
@@ -213,7 +242,36 @@ export async function getDayLedgerCountPerItemCompany(date: Date) {
 
     // Update - Check if a Vendor or a Company Admin
 
-    const dateString = date.toISOString().split("T")[0]; // Extract YYYY-MM-DD
+    // Convert Date to ISO String in UTC
+    const utcISOString = date.toISOString();
+    const [utcDate, utcTime] = utcISOString.split("T");
+
+    // Extract hours, minutes, seconds from the time
+    const [hours, minutes] = utcTime.split(":").map(Number);
+
+    // Convert UTC time to IST (+5:30)
+    let istHours = hours + 5;
+    let istMinutes = minutes + 30;
+
+    if (istMinutes >= 60) {
+      istHours += Math.floor(istMinutes / 60);
+      istMinutes = istMinutes % 60;
+    }
+
+    let istDate = parseInt(utcDate.split("-")[2]); // Extract day
+
+    if (istHours >= 24) {
+      istDate += Math.floor(istHours / 24);
+      istHours = istHours % 24;
+    }
+
+    // Reconstruct IST date string
+    const year = utcDate.split("-")[0];
+    const month = utcDate.split("-")[1];
+    const day = String(istDate).padStart(2, "0");
+    const dateString = `${year}-${month}-${day}`;
+    console.log(dateString);
+
     const itemCountsPerCompany = await db.lunchLedger.groupBy({
       by: ["companyId", "lunchItemId"],
       _count: { lunchItemId: true },
