@@ -5,6 +5,13 @@
 import { db } from "@/lib/prisma";
 import { auth } from "@clerk/nextjs/server";
 
+// Function to convert the date to IST
+const getISTDate = (date: Date) => {
+  const utcDate = new Date(date.getTime() + date.getTimezoneOffset() * 60000); // Convert to UTC
+  const istDate = new Date(utcDate.getTime() + 5.5 * 60 * 60 * 1000); // Add IST offset (UTC+5:30)
+  return istDate;
+};
+
 export async function getLedger(lunchLedgerId: string) {
   try {
     const { userId } = await auth();
@@ -209,6 +216,9 @@ export async function getDayLedgerCountPerItemCompany(date: Date) {
   try {
     const { userId } = await auth();
     if (!userId) throw new Error("Unauthorized!");
+
+    // Update date to IST from UTC
+    date = getISTDate(date);
 
     // Update - Check if a Vendor or a Company Admin
 
