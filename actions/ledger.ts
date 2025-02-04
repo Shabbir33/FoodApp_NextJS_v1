@@ -5,13 +5,6 @@
 import { db } from "@/lib/prisma";
 import { auth } from "@clerk/nextjs/server";
 
-// Function to convert the date to IST
-const getISTDate = (date: Date) => {
-  const utcDate = new Date(date.getTime() + date.getTimezoneOffset() * 60000); // Convert to UTC
-  const istDate = new Date(utcDate.getTime() + 5.5 * 60 * 60 * 1000); // Add IST offset (UTC+5:30)
-  return istDate;
-};
-
 export async function getLedger(lunchLedgerId: string) {
   try {
     const { userId } = await auth();
@@ -180,14 +173,15 @@ export async function getDayLedgerCountPerItem(date: Date) {
 
     // Update - Check if a Vendor
 
+    const dateString = date.toISOString().split("T")[0]; // Extract YYYY-MM-DD
     // Query for the count of lunch items grouped by lunchItemId for the given date
     const itemCounts = await db.lunchLedger.groupBy({
       by: ["lunchItemId"],
       _count: { lunchItemId: true },
       where: {
         date: {
-          gte: new Date(date.setHours(0, 0, 0, 0)), // Start of the day
-          lt: new Date(date.setHours(23, 59, 59, 999)), // End of the day
+          gte: `${dateString}T00:00:00.000Z`, // Start of the day
+          lt: `${dateString}T23:59:59.999Z`, // End of the day
         },
       },
     });
@@ -217,19 +211,16 @@ export async function getDayLedgerCountPerItemCompany(date: Date) {
     const { userId } = await auth();
     if (!userId) throw new Error("Unauthorized!");
 
-    // Update date to IST from UTC
-    date = getISTDate(date);
-
     // Update - Check if a Vendor or a Company Admin
 
-    // Query for the count of lunch items grouped by companyId and lunchItemId for the given date
+    const dateString = date.toISOString().split("T")[0]; // Extract YYYY-MM-DD
     const itemCountsPerCompany = await db.lunchLedger.groupBy({
       by: ["companyId", "lunchItemId"],
       _count: { lunchItemId: true },
       where: {
         date: {
-          gte: new Date(date.setHours(0, 0, 0, 0)), // Start of the day
-          lt: new Date(date.setHours(23, 59, 59, 999)), // End of the day
+          gte: `${dateString}T00:00:00.000Z`, // Start of the day
+          lt: `${dateString}T23:59:59.999Z`, // End of the day
         },
       },
     });

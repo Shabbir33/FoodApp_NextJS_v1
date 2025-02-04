@@ -16,20 +16,11 @@ const FoodItemList = ({ date }: { date: Date }) => {
     useState<ItemCountType[]>();
   const [loading, setLoading] = useState(true);
 
-  // Function to convert the date to IST
-  const getISTDate = (date: Date) => {
-    const utcDate = new Date(date.getTime() + date.getTimezoneOffset() * 60000); // Convert to UTC
-    const istDate = new Date(utcDate.getTime() + 5.5 * 60 * 60 * 1000); // Add IST offset (UTC+5:30)
-    return istDate;
-  };
-
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
       console.log(date);
-      const data: ItemCountType[] = await getDayLedgerCountPerItem(
-        getISTDate(date)
-      );
+      const data: ItemCountType[] = await getDayLedgerCountPerItem(date);
 
       setLunchItemsCountForDay(data);
       setLoading(false);
