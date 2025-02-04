@@ -39,8 +39,10 @@ const CompanyList = ({ date }: { date: Date }) => {
 
   // Function to convert the date to IST
   const getISTDate = (date: Date) => {
+    console.log(date);
     const utcDate = new Date(date.getTime() + date.getTimezoneOffset() * 60000); // Convert to UTC
     const istDate = new Date(utcDate.getTime() + 5.5 * 60 * 60 * 1000); // Add IST offset (UTC+5:30)
+    console.log(istDate);
     return istDate;
   };
 
@@ -81,6 +83,7 @@ const CompanyList = ({ date }: { date: Date }) => {
 
   return (
     <div className="p-4">
+      {getISTDate(date).toLocaleString()}
       {companyData?.map((company) => (
         <Card
           key={company.id}
